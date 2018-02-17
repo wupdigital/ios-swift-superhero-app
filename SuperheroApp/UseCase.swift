@@ -22,8 +22,8 @@ protocol UseCaseResponse {
 class UseCase<Rq, Rs> where Rq: UseCaseRequest, Rs: UseCaseResponse {
 
     var request: Rq?
-    var success: ((Rs) -> Void)?
-    var error: (() -> Void)?
+    var onSuccess: ((Rs) -> Void)?
+    var onError: (() -> Void)?
 
     final func run() throws {
         guard let request = self.request else {

@@ -22,7 +22,7 @@ class CharactersRemoteDataSource: CharactersDataSource {
         self.privateApiKey = privateApiKey
     }
 
-    func loadCharacters(page: Page, complete: @escaping ([Character]) -> Void, fail: @escaping () -> Void) {
+    func loadCharacters(page: Page, onSuccess: @escaping ([Character]) -> Void, onError: @escaping () -> Void) {
 
         let timestamp = Int(Date().timeIntervalSince1970)
         let hash = "\(timestamp)\(privateApiKey)\(publicApiKey)"
@@ -41,14 +41,14 @@ class CharactersRemoteDataSource: CharactersDataSource {
                                      completionHandler: { (response: DataResponse<[Character]>) in
 
                 if response.error != nil {
-                    fail()
+                    onError()
                 } else {
-                    complete(response.value!)
+                    onSuccess(response.value!)
                 }
             })
     }
 
-    func loadCharacter(characterId: Int, complete: @escaping (Character?) -> Void, fail: @escaping () -> Void) {
+    func loadCharacter(characterId: Int, onSuccess: @escaping (Character?) -> Void, onError: @escaping () -> Void) {
         let timestamp = Int(Date().timeIntervalSince1970)
         let hash = "\(timestamp)\(privateApiKey)\(publicApiKey)"
 
@@ -63,14 +63,14 @@ class CharactersRemoteDataSource: CharactersDataSource {
             .responseDecodableObject(keyPath: "data.results", decoder: JSONDecoder(),
                                      completionHandler: { (response: DataResponse<[Character]>) in
                 if response.error != nil {
-                    fail()
+                    onError()
                 } else {
-                    complete(response.value?.first)
+                    onSuccess(response.value?.first)
                 }
             })
     }
 
-    func saveCharacters(characters: [Character], complete: @escaping () -> Void, fail: @escaping () -> Void) {
-        complete()
+    func saveCharacters(characters: [Character], onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
+        onSuccess()
     }
 }

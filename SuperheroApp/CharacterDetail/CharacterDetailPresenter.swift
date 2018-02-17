@@ -26,7 +26,7 @@ class CharacterDetailPresenter: CharacterDetailMvpPresenter {
 
         self.useCaseHandler.executeUseCase(useCase: self.getCharacterUseCase,
                                            request: request,
-                                           success: { (response: GetCharacterResponse) in
+                                           onSuccess: { (response: GetCharacterResponse) in
 
             if let character = response.character {
 
@@ -35,7 +35,7 @@ class CharacterDetailPresenter: CharacterDetailMvpPresenter {
             } else {
                 // TODO character not found
             }
-        }, error: {
+        }, onError: {
             // TODO show error message
         })
     }

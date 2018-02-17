@@ -8,9 +8,9 @@
 
 protocol CharactersDataSource {
 
-    func loadCharacters(page: Page, complete: @escaping ([Character]) -> Void, fail: @escaping () -> Void)
+    func loadCharacters(page: Page, onSuccess: @escaping ([Character]) -> Void, onError: @escaping () -> Void)
 
-    func loadCharacter(characterId: Int, complete: @escaping (Character?) -> Void, fail: @escaping () -> Void)
+    func loadCharacter(characterId: Int, onSuccess: @escaping (Character?) -> Void, onError: @escaping () -> Void)
 
-    func saveCharacters(characters: [Character], complete: @escaping () -> Void, fail: @escaping () -> Void)
+    func saveCharacters(characters: [Character], onSuccess: @escaping () -> Void, onError: @escaping () -> Void)
 }

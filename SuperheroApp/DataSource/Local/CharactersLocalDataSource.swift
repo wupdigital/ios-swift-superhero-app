@@ -16,7 +16,7 @@ class CharactersLocalDataSource: CharactersDataSource {
         self.persistentContainer = persistentContainer
     }
 
-    func loadCharacters(page: Page, complete: @escaping ([Character]) -> Void, fail: @escaping () -> Void) {
+    func loadCharacters(page: Page, onSuccess: @escaping ([Character]) -> Void, onError: @escaping () -> Void) {
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CharacterEntity")
         fetchRequest.fetchLimit = page.limit
         fetchRequest.fetchOffset = page.offset
@@ -37,14 +37,13 @@ class CharactersLocalDataSource: CharactersDataSource {
                 }
             }
 
-            complete(characters)
-
+            onSuccess(characters)
         } catch {
-            fail()
+            onError()
         }
     }
 
-    func loadCharacter(characterId: Int, complete: @escaping (Character?) -> Void, fail: @escaping () -> Void) {
+    func loadCharacter(characterId: Int, onSuccess: @escaping (Character?) -> Void, onError: @escaping () -> Void) {
 
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CharacterEntity")
         fetchRequest.predicate = NSPredicate(format: "id = \(characterId)")
@@ -57,15 +56,15 @@ class CharactersLocalDataSource: CharactersDataSource {
                 let name = entity.value(forKey: "name") as? String,
                 let thumbnailUrl = entity.value(forKey: "thumbnailUrl") as? String {
                 let character = Character(characterId: characterId, name: name, thumbnailUrl: thumbnailUrl)
-                complete(character)
+                onSuccess(character)
             }
 
         } catch {
-            fail()
+            onError()
         }
     }
 
-    func saveCharacters(characters: [Character], complete: @escaping () -> Void, fail: @escaping () -> Void) {
+    func saveCharacters(characters: [Character], onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
 
         for character in characters {
             let entity = NSEntityDescription .insertNewObject(forEntityName: "CharacterEntity",
@@ -76,9 +75,9 @@ class CharactersLocalDataSource: CharactersDataSource {
         }
         do {
             try self.persistentContainer.viewContext.save()
-            complete()
+            onSuccess()
         } catch {
-            fail()
+            onError()
         }
     }
 }

@@ -31,15 +31,15 @@ class GetCharacterUseCase: UseCase<GetCharacterRequest, GetCharacterResponse> {
     }
 
     override func executeUseCase(request: GetCharacterRequest) throws {
-        self.charactersDataSource.loadCharacter(characterId: request.characterId, complete: { (character) in
-
-            if let success = self.success {
+        self.charactersDataSource.loadCharacter(characterId: request.characterId, onSuccess: { (character) in
+            
+            if let onSuccess = self.onSuccess {
                 let response = GetCharacterResponse(character: character)
-                success(response)
+                onSuccess(response)
             }
-        }, fail: {
-            if let error = self.error {
-                error()
+        }, onError: {
+            if let onError = self.onError {
+                onError()
             }
         })
     }

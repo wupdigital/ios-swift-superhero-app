@@ -16,41 +16,41 @@ class CharactersRepository: CharactersDataSource {
         self.remoteDataSource = remoteDataSource
     }
 
-    func loadCharacters(page: Page, complete: @escaping ([Character]) -> Void, fail: @escaping () -> Void) {
-        self.localDataSource.loadCharacters(page: page, complete: { (characters: [Character]) in
+    func loadCharacters(page: Page, onSuccess: @escaping ([Character]) -> Void, onError: @escaping () -> Void) {
+        self.localDataSource.loadCharacters(page: page, onSuccess: { (characters: [Character]) in
             if characters.isEmpty {
-                self.remoteDataSource.loadCharacters(page: page, complete: { (characters) in
-                    self.localDataSource.saveCharacters(characters: characters, complete: {}, fail: {})
-                    complete(characters)
-                }, fail: fail)
+                self.remoteDataSource.loadCharacters(page: page, onSuccess: { (characters) in
+                    self.localDataSource.saveCharacters(characters: characters, onSuccess: {}, onError: {})
+                    onSuccess(characters)
+                }, onError: onError)
             } else {
-                complete(characters)
+                onSuccess(characters)
             }
-        }, fail: {
-            self.remoteDataSource.loadCharacters(page: page, complete: { (characters) in
-                self.localDataSource.saveCharacters(characters: characters, complete: {}, fail: {})
-                complete(characters)
-            }, fail: fail)
+        }, onError: {
+            self.remoteDataSource.loadCharacters(page: page, onSuccess: { (characters) in
+                self.localDataSource.saveCharacters(characters: characters, onSuccess: {}, onError: {})
+                onSuccess(characters)
+            }, onError: onError)
         })
     }
 
-    func loadCharacter(characterId: Int, complete: @escaping (Character?) -> Void, fail: @escaping () -> Void) {
-        self.localDataSource.loadCharacter(characterId: characterId, complete: { (character) in
+    func loadCharacter(characterId: Int, onSuccess: @escaping (Character?) -> Void, onError: @escaping () -> Void) {
+        self.localDataSource.loadCharacter(characterId: characterId, onSuccess: { (character) in
             if let character = character {
-                complete(character)
+                onSuccess(character)
             } else {
-                self.remoteDataSource.loadCharacter(characterId: characterId, complete: complete, fail: fail)
+                self.remoteDataSource.loadCharacter(characterId: characterId, onSuccess: onSuccess, onError: onError)
             }
-        }, fail: {
-            self.remoteDataSource.loadCharacter(characterId: characterId, complete: complete, fail: fail)
+        }, onError: {
+            self.remoteDataSource.loadCharacter(characterId: characterId, onSuccess: onSuccess, onError: onError)
         })
     }
 
-    func saveCharacters(characters: [Character], complete: @escaping () -> Void, fail: @escaping () -> Void) {
-        self.localDataSource.saveCharacters(characters: characters, complete: {
-            self.remoteDataSource.saveCharacters(characters: characters, complete: {}, fail: {})
-        }, fail: {
-            self.remoteDataSource.saveCharacters(characters: characters, complete: {}, fail: {})
+    func saveCharacters(characters: [Character], onSuccess: @escaping () -> Void, onError: @escaping () -> Void) {
+        self.localDataSource.saveCharacters(characters: characters, onSuccess: {
+            self.remoteDataSource.saveCharacters(characters: characters, onSuccess: {}, onError: {})
+        }, onError: {
+            self.remoteDataSource.saveCharacters(characters: characters, onSuccess: {}, onError: {})
         })
     }
 

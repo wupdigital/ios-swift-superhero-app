@@ -42,7 +42,7 @@ class CharactersPreseneter: CharactersMvpPresenter {
 
         self.useCaseHandler.executeUseCase(useCase: self.getCharactersUseCase,
                                            request: request,
-                                           success: { (response: GetCharactersResponse) in
+                                           onSuccess: { (response: GetCharactersResponse) in
             self.view?.hideLoadingIndicator()
 
             if response.characters.isEmpty {
@@ -51,7 +51,7 @@ class CharactersPreseneter: CharactersMvpPresenter {
                 self.objects.append(contentsOf: response.characters)
                 self.view?.refreshCharacters()
             }
-        }, error: {
+        }, onError: {
             self.view?.hideLoadingIndicator()
             // TODO hardcoded message
             self.view?.showLoadingCharactersError(message: "Something wrong!")
@@ -66,7 +66,7 @@ class CharactersPreseneter: CharactersMvpPresenter {
 
         self.useCaseHandler.executeUseCase(useCase: self.getCharactersUseCase,
                                            request: request,
-                                           success: { (response: GetCharactersResponse) in
+                                           onSuccess: { (response: GetCharactersResponse) in
             self.view?.hideMoreLoadingIndicator()
 
             if response.characters.isEmpty {
@@ -75,7 +75,7 @@ class CharactersPreseneter: CharactersMvpPresenter {
                 self.objects.append(contentsOf: response.characters)
                 self.view?.refreshCharacters()
             }
-        }, error: {
+        }, onError: {
             // TODO remove hardcoded message
             self.view?.hideMoreLoadingIndicator()
             self.view?.showLoadingCharactersError(message: "Something wrong!")

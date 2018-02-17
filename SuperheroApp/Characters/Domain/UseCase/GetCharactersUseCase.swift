@@ -27,14 +27,14 @@ class GetCharactersUseCase: UseCase<GetCharactersRequest, GetCharactersResponse>
     }
 
     override func executeUseCase(request: GetCharactersRequest) throws {
-        self.charactersDataSource.loadCharacters(page: request.page, complete: { (characters: [Character]) in
+        self.charactersDataSource.loadCharacters(page: request.page, onSuccess: { (characters: [Character]) in
             let response = GetCharactersResponse(characters: characters)
-            if let success = self.success {
-                success(response)
+            if let onSuccess = self.onSuccess {
+                onSuccess(response)
             }
-        }, fail: {
-            if let error = self.error {
-                error()
+        }, onError: {
+            if let onError = self.onError {
+                onError()
             }
         })
     }

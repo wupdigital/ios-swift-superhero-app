@@ -16,14 +16,14 @@ class UseCaseHandler {
 
     func executeUseCase<Rq, Rs>(useCase: UseCase<Rq, Rs>,
                                 request: Rq,
-                                success: @escaping (Rs) -> Void,
-                                error: @escaping () -> Void) {
+                                onSuccess: @escaping (Rs) -> Void,
+                                onError: @escaping () -> Void) {
         useCase.request = request
-        useCase.success = { (response: Rs) in
-            self.notifyResponse(success: success, response: response)
+        useCase.onSuccess = { (response: Rs) in
+            self.notifyResponse(onSuccess: onSuccess, response: response)
         }
-        useCase.error = {
-            self.notifyError(error: error)
+        useCase.onError = {
+            self.notifyError(onError: onError)
         }
 
         self.useCaseScheduler.execute {
@@ -35,13 +35,13 @@ class UseCaseHandler {
         }
     }
 
-    private func notifyResponse<Rs: UseCaseResponse>(success: @escaping (Rs) -> Void, response: Rs) {
-        self.useCaseScheduler.notifyResponse(callback: success, response: response)
+    private func notifyResponse<Rs: UseCaseResponse>(onSuccess: @escaping (Rs) -> Void, response: Rs) {
+        self.useCaseScheduler.notifyResponse(callback: onSuccess, response: response)
     }
 
-    private func notifyError(error: @escaping () -> Void) {
+    private func notifyError(onError: @escaping () -> Void) {
         self.useCaseScheduler.notifyError {
-            error()
+            onError()
         }
     }
 
